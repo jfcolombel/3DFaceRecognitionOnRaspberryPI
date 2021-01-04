@@ -20,7 +20,7 @@ def saveVideo(destination_folder):
     vs=PiVideoStream(resolution=(320,240),framerate=32).start()
     time.sleep(2)
 
-    videoWriter=cv2.VideoWriter(os.path.join(destination,str(len(os.listdir(destination)))+".mp4"),cv2.VideoWriter_fourcc(*'XVID'),32,(320,240))
+    videoWriter=cv2.VideoWriter(os.path.join(destination,str(len(os.listdir(destination)))+".mp4"),cv2.VideoWriter_fourcc(*'mp4v'),32,(320,240)) #codec mp4v au lieu de XVID
     print("Press CTRL C to stop recording...")
     while(True):
         try:
