@@ -20,6 +20,10 @@ import threading
 from imutils.video.pivideostream import PiVideoStream
 
 from argparse import ArgumentParser
+from datetime import datetime
+
+import RPi.GPIO as GPIO
+import time
 
 lock=threading.Lock()
 outputFrame=None
@@ -27,6 +31,10 @@ registeredFace=None
 app=Flask(__name__)
 vs=PiVideoStream(resolution=(320,240),framerate=32).start()
 time.sleep(2)
+GPIO.setmode(GPIO.BCM) # BCM = emplacements GPIO
+GPIO.setup(5, GPIO.OUT) # LED Rouge sur GPIO 5 Pin n°29
+GPIO.setup(27, GPIO.OUT) # LED Verte sur GPIO 27 Pin n°13
+
     
 def process():
     global vs, outputFrame, lock, registeredFace,lock
@@ -59,8 +67,35 @@ def process():
     while(True):
 
         frame = vs.read()
-        image,front= face_recognition_HAAR.performFaceRecognitionWithFrontalisationV2(frame,recognizer, model3D, eyeMask,labelNumPersonDict)
+        start=time.time()
+        image,front,identities = face_recognition_HAAR.performFaceRecognitionWithFrontalisationV2(frame,recognizer, model3D, eyeMask,labelNumPersonDict)
         
+        if("papi" in identities) :
+            print("Papi est ici")
+            GPIO.setmode(GPIO.BCM) # BCM = emplacements GPIO
+            GPIO.setup(5, GPIO.OUT) # LED Rouge sur GPIO 5 Pin n°29
+            GPIO.setup(27, GPIO.OUT) # LED Verte sur GPIO 27 Pin n°13
+            GPIO.output(5, True)
+            GPIO.output(27, False)
+            time.sleep(0.5)
+            GPIO.cleanup()
+        elif("mamie" in identities) :
+            print("Mamie est ici")
+            GPIO.setmode(GPIO.BCM) # BCM = emplacements GPIO
+            GPIO.setup(5, GPIO.OUT) # LED Rouge sur GPIO 5 Pin n°29
+            GPIO.setup(27, GPIO.OUT) # LED Verte sur GPIO 27 Pin n°13
+            GPIO.output(5, False)
+            GPIO.output(27, True)
+            time.sleep(0.5)
+            GPIO.cleanup()
+                                      
+        
+        
+        #image=np.zeros(frame.shape)
+        #front=np.zeros([64,64,3])
+        
+        finish=time.time()
+        print("FPS:",1.0/(finish-start))
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
         

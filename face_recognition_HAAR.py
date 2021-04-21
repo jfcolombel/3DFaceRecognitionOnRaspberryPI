@@ -181,6 +181,7 @@ def searchForFaceInTheWholeImage(image,draw=False):
 
 
 def performFaceRecognitionWithFrontalisationV2(image,recognizer, model3D, eyemask,names):
+    identified_identities = []
     start=time.time() 
     imageWithLandmarks,landmarks,faceROIs=searchForFaceInTheWholeImage(np.copy(image))
     result=[]
@@ -218,6 +219,7 @@ def performFaceRecognitionWithFrontalisationV2(image,recognizer, model3D, eyemas
                 pass
             
             identity=list(names.keys())[list(names.values()).index(pred)]
+            identified_identities.append(identity)
             cv2.rectangle(imageWithLandmarks,(faceROI[1],faceROI[0]),(faceROI[1]+faceROI[3],faceROI[0]+faceROI[2]),(255,0,255),2)
             cv2.putText(imageWithLandmarks,identity ,(faceROI[1],faceROI[0]),cv2.FONT_HERSHEY_SIMPLEX,0.5,(0,0,255),thickness=1)
         else:
@@ -231,7 +233,7 @@ def performFaceRecognitionWithFrontalisationV2(image,recognizer, model3D, eyemas
 
     cv2.putText(imageWithLandmarks,"FPS: "+"{0:.2f}".format(round(1.0/(end-start),2)) ,(15,15),cv2.FONT_HERSHEY_SIMPLEX,0.5,(0,0,255),thickness=1)
     
-    return imageWithLandmarks,registeredFaceColor
+    return imageWithLandmarks,registeredFaceColor, identified_identities
 
 
 if __name__ =="__main__":
