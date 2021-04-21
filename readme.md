@@ -4,7 +4,7 @@ This code is a facial recognition system for  RaspberryPi based on 3D frontaliza
 
 It is tested on Python3.6, and it uses dlib, Opencv3.0 and flask (for streaming the output to your web browser)
 
-this code is suitable for the facial recognition of two people and the lighting of two LEDs depending on the time and delivery of medication
+This code is suitable for the facial recognition of two people and the lighting of two LEDs depending on the time and delivery of medication
 
 ## Install requirements
 ```sh
